@@ -1,0 +1,65 @@
+ABHINAZH BOT V5.8.5 — START / UPDATE
+
+1. Make a complete copy of your current bot folder and bot_data.sqlite3.
+2. Extract V5.8.5 over the project folder. Do not delete the SQLite database or local_storage.
+3. Install/update dependencies from requirements.txt.
+4. Make sure BOT_TOKEN is set to the bot's current token.
+5. Start the bot with ./run_bot.sh (or bash run_bot.sh).
+
+SOURCE GROUP SETUP
+- Add the bot to the source group.
+- The Superadmin/app Admin must also be a Telegram administrator there.
+- Run /setsource from your personal Telegram account inside that group.
+- For the group indexer to see ordinary listing posts, disable Group Privacy Mode in BotFather, or make each post explicitly relevant to the bot. Restart the bot after BotFather changes if required.
+
+SOURCE CHANNEL SETUP (NEW IN V5.8)
+- Add the bot as an administrator of the channel.
+- Make sure the Superadmin/app Admin is also an administrator of the channel.
+- Open the bot's private chat as the personal Superadmin account and press Start. The bot must be able to DM you.
+- Open the bot DM from your personal account and send /setsource @channelusername (for example /setsource @estrownf). Do not send the command as a channel post.
+- Run /source and /audit privately.
+- Publish a new channel post and verify it is indexed. Edit the post and verify the index is updated.
+
+PRIVATE ADMIN REQUEST GROUP
+- Use a separate private Telegram group. Add the bot.
+- Send /setadmin from the Superadmin's personal account inside that group.
+- Do not send /setadmin as a channel post.
+
+IMPORTANT TELEGRAM DIFFERENCES
+- Group Privacy Mode applies to group message visibility. It does not convert channels into groups.
+- Channels send channel_post / edited_channel_post updates. python-telegram-bot CommandHandler does not process channel posts. V5.8 handles both channel update types; channel-post commands are reported to the configured Superadmin by private DM, not by posting a reply in the channel.
+- Channel posts do not identify the human who published them. Therefore channel source setup is authorized from the Superadmin/Admin's private bot chat, with Telegram membership checks for both the person and the bot.
+
+TEST BEFORE PUBLIC RELEASE
+- Verify /start and /help privately.
+- Verify source group and/or source channel indexing with a fresh post.
+- Edit a source post and check the indexed listing updates.
+- Verify /setadmin in the separate private admin group.
+- Verify Buy/Notify request routing and admin replies.
+- Run /audit and inspect Termux logs.
+- Keep your pre-update backup until all live checks pass.
+
+Do not describe the bot as live-verified until these tests succeed against the actual Telegram bot and chats.
+
+
+ADMIN / MERCHANT POST CREATION (V5.8.5)
+- Configure the listing destination using /setsource (this is where /add post publishes).
+- In the bot's private chat, an authorized app Admin, Superadmin or approved Merchant sends /add post.
+- Upload up to 10 screenshots, then send /done.
+- Answer the guided fields for account number, kingdom/migration, account type, might, base stats, price, artifacts/blessed, champions/cups, castle/mana, familiars/binding and extra search terms. Account number, might and the three base stats are required; use /skip for optional fields and /back to correct the prior answer.
+- The bot creates a caption and sends the screenshot album as a preview. Use /editcaption to revise it.
+- If the preview does not arrive, retry with /preview; publishing is locked until the preview is delivered.
+- Use /confirm to publish or /cancel to discard before publication.
+- The primary /setsource chat is indexed. The Superadmin can add extra groups/channels with /adddestination @username or a chat ID, list them with /destinations, and remove them with /removedestination @username or a chat ID.
+- Successful destination copies are never resent. /confirm retries definite failures; uncertain sends are held for manual checking to prevent duplicates.
+- The bot needs posting/copy permissions in every configured destination.
+
+
+ADMIN LISTING / DESTINATION COMMANDS (V5.8.5)
+- /delete: run /find privately as an app Admin/Superadmin, then reply to that account's result summary or copied screenshot with /delete. It removes the listing from the searchable database and local archive; it does not remove the original Telegram post.
+- /deleteall: run in the bot private chat as the fixed Superadmin. Starts a confirmation flow and requires a successful verified backup before clearing all searchable account listings. Settings, roles and alerts are preserved; historical request tickets remain but are detached from deleted listing IDs. Original Telegram posts remain; this is not a complete SQLite wipe.
+- /setposttopic: in the configured forum supergroup, run this inside the topic where new /add post listings should appear. Run /setposttopic general to use the General/default topic. Run it privately without arguments to view the saved topic.
+
+FORUM TOPIC BEHAVIOR
+- No topic setting: confirmed listings go to the supergroup's General/default topic.
+- Selected topic: confirmed listings go to the saved topic ID. Existing listings are not moved. Changing /setsource to another group/channel clears the old topic setting automatically.
